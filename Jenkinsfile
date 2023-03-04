@@ -9,20 +9,20 @@ pipeline {
         }
         stage('Build and Test'){
             steps{
-                sh 'docker build . -t trainwithshubham/node-todo-test:latest'
+                bash 'docker build . -t trainwithshubham/node-todo-test:latest'
             }
         }
         stage('Push'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-        	     sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                 sh 'docker push trainwithshubham/node-todo-test:latest'
+        	     bash "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                 bash 'docker push trainwithshubham/node-todo-test:latest'
                 }
             }
         }
         stage('Deploy'){
             steps{
-                sh "docker-compose down && docker-compose up -d"
+                bash "docker-compose down && docker-compose up -d"
             }
         }
     }
